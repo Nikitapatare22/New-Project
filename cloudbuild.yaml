@@ -1,0 +1,23 @@
+# cloudbuild.yaml
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/qwiklabs-gcp-00-393f9f205c58/kubernetesproject:1.0', '.']
+ 
+  # Step 2: Push the image to Google Container Registry (GCR)
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/qwiklabs-gcp-00-393f9f205c58/kubernetesproject:1.0']
+ 
+  # Step 3: Deploy the Docker image to GKE
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - 'apply'
+      - '-f'
+      - 'deployment.yaml'
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - 'apply'
+      - '-f'
+      - 'service.yaml'
+images:
+  - 'gcr.io/qwiklabs-gcp-00-393f9f205c58/kubernetesproject:1.0'
